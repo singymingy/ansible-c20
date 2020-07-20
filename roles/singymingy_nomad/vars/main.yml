@@ -1,0 +1,6 @@
+---
+# vars file for singymingy_nomad
+NOMAD_VERSION: 0.12.0
+
+os_pkgs:
+  - unzip

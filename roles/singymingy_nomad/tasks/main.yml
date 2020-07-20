@@ -1,0 +1,49 @@
+---
+# tasks file for singymingy_nomad
+
+- name: Install require OS pkgs
+  yum:
+    name: "{{ os_pkgs }}"
+    state:  installed
+
+- name: Install nomad
+  unarchive:
+    src: "https://releases.hashicorp.com/nomad/{{ NOMAD_VERSION }}/nomad_{{ NOMAD_VERSION }}_linux_amd64.zip"
+    dest: "/usr/local/bin"
+    remote_src: yes
+
+- name: Create require DIR for nomad to perform its tasks
+  file:
+    path: /opt/nomad    # data DIR
+    state: directory
+    owner: root
+    group: root
+
+- name: Add systemd for nomad.service
+  copy:
+    src:  nomad.service
+    dest: /etc/systemd/system/nomad.service
+
+- name: Create configuration file for nomad
+  file:
+    path: /etc/nomad.d
+    state: directory  
+    owner: root
+    group: root
+    mode: 700
+
+- name: Add nomad.hcl config file
+  copy:
+    src:  nomad.hcl
+    dest: /etc/nomad.d/nomad.hcl
+
+- name: Add server.hcl to nomad server
+  copy:
+    src:  server.hcl
+    dest: /etc/nomad.d/server.hcl
+
+- name: Start nomad service
+  service:
+    name: nomad
+    state:  started
+    enabled:  yes

@@ -1,0 +1,9 @@
+--- 
+- name: Setup HOST
+  hosts:  all
+  user: centos
+  become: yes
+
+  roles:
+    - singymingy_docker
+    - singymingy_nomad
